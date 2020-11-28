@@ -42,6 +42,13 @@ public abstract class Command<T> {
         throw new RuntimeException();
     }
 
+    /***
+     * Assign the value of variables
+     */
+    public void parseVariablesIntoNumbers() {
+
+    }
+
     public String[] getArgs() {
         return args;
     }

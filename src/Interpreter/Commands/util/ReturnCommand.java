@@ -3,14 +3,15 @@ package Interpreter.Commands.util;
 import Interpreter.CalcExpresion;
 import Interpreter.Commands.Exceptions.InvalidArgumentsException;
 import Interpreter.Commands.Fundation.UnaryCommand;
+import test.MyInterpreter;
 
-public final class Return extends UnaryCommand<Integer> {
+public final class ReturnCommand extends UnaryCommand<Integer> {
 
     private Integer returnStatus;
 
     public static final String RETURN_COMMAND_NAME = "return";
 
-    public Return() {
+    public ReturnCommand() {
         super(RETURN_COMMAND_NAME);
     }
 
@@ -20,7 +21,7 @@ public final class Return extends UnaryCommand<Integer> {
         if (returnStatus == null) {
             throw new VerifyError("Impossible return command: no value set for return");
         }
-        System.exit(returnStatus);
+        //System.exit(returnStatus);
         return returnStatus;
     }
 
@@ -32,8 +33,9 @@ public final class Return extends UnaryCommand<Integer> {
      */
     @Override
     public void setArgs(String[] args) throws InvalidArgumentsException {
-        super.setArgs(args);
-        String commandArgument =getCommandArgument();
+        String[] parseVariblesArguemnts = MyInterpreter.getInstance().assignVariableValues(args);
+        super.setArgs(parseVariblesArguemnts);
+        String commandArgument = getCommandArgument();
         this.returnStatus = (int) CalcExpresion.calc(commandArgument);
     }
 

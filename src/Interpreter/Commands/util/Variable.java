@@ -3,9 +3,18 @@ package Interpreter.Commands.util;
 import Interpreter.Commands.Fundation.Command;
 
 // TODO: 25/11/2020 Implement this class
-public class Variable<T> extends Command<T> {
-    @Override
-    public T execute() {
-        return null;
+public class Variable {
+
+    public String name;
+
+    public Double value;
+
+    public Variable(String name, Double value) {
+        this.value = value;
+        this.name = name;
+    }
+
+    public boolean hasValue() {
+        return value != null;
     }
 }
