@@ -30,7 +30,8 @@ public class MyInterpreter {
 	public String assignVariableValues(String command) {
 		String replacedVariableWithValueCommand = command;
 		for (Variable variable : variables.allVariables()) {
-			replacedVariableWithValueCommand.replace(variable.name, String.valueOf(variable.value));
+			replacedVariableWithValueCommand =
+					replacedVariableWithValueCommand.replace(variable.name, String.valueOf(variable.value));
 		}
 		return replacedVariableWithValueCommand;
 	}
@@ -47,6 +48,7 @@ public class MyInterpreter {
 	}
 
 	public static int interpret(String[] lines){
+
 		Object returnedCommandValue;
 		for (String line : lines) {
 

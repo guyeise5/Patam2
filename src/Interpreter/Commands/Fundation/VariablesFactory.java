@@ -2,10 +2,7 @@ package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.util.Variable;
 
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public final class VariablesFactory implements Variables {
 
@@ -18,13 +15,13 @@ public final class VariablesFactory implements Variables {
         return instance;
     }
 
-    final private Map<String, Variable> variables;
+    private Map<String, Variable> variables;
 
     /**
      * Variables class is a singleton, do not allow access
      */
     private VariablesFactory() {
-        this.variables = new IdentityHashMap<>();
+        dropAllVariables();
     }
 
     @Override
@@ -65,8 +62,14 @@ public final class VariablesFactory implements Variables {
         return variables.values();
     }
 
+
     public synchronized boolean containsVariable(String var) {
         return variables.containsKey(var);
+    }
+
+    @Override
+    public synchronized void dropAllVariables() {
+        this.variables = new HashMap<>();
     }
 
     private synchronized void ensureExistingVariable(String var) {

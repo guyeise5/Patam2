@@ -20,4 +20,7 @@ public interface Variables {
     void bind(String existingVariable, String newVariable);
 
     Collection<Variable> allVariables();
+
+    void dropAllVariables();
+
 }

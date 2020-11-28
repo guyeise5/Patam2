@@ -19,6 +19,7 @@ public class CommandTranslator {
         this.commands = new HashMap<>();
         this.commands.put("return", ReturnCommand.class);
         this.commands.put("var", CreateVariableCommand.class);
+        this.commands.put("=", AssignVariableCommand.class);
     }
 
     public static CommandTranslator getInstance() {
