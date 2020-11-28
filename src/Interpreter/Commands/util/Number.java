@@ -1,9 +1,10 @@
 package Interpreter.Commands.util;
 
+import Expression.Expression;
 import Interpreter.Commands.Exceptions.InvalidArgumentsException;
 import Interpreter.Commands.Fundation.Command;
 
-public class Number extends Command<Double> {
+public class Number extends Command<Double> implements Expression {
     double value;
 
     @Override
@@ -22,5 +23,10 @@ public class Number extends Command<Double> {
         this.value = Double.parseDouble(this.getArgs()[0]);
 
         super.setArgs(args);
+    }
+
+    @Override
+    public double calculate() {
+        return execute();
     }
 }

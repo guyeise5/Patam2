@@ -15,6 +15,8 @@ public interface Variables {
 
     double getValue(String variable);
 
+    Variable getVariable(String variable);
+
     void bind(String existingVariable, String newVariable);
 
     Collection<Variable> allVariables();

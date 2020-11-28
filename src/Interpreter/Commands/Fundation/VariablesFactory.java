@@ -28,27 +28,32 @@ public final class VariablesFactory implements Variables {
     }
 
     @Override
-    public void createVariable(String variableName) {
+    public synchronized void createVariable(String variableName) {
         ensureEmptyVariable(variableName);
         Variable reference = new Variable(variableName, null);
         variables.put(variableName, reference);
     }
 
     @Override
-    public void assignValue(String var, double value) {
+    public synchronized void assignValue(String var, double value) {
         ensureExistingVariable(var);
         Variable reference = variables.get(var);
         reference.value = value;
     }
 
     @Override
-    public double getValue(String variable) {
-        ensureExistingVariable(variable);
-        return variables.get(variable).value;
+    public synchronized double getValue(String variable) {
+        return getVariable(variable).value;
     }
 
     @Override
-    public void bind(String existingVariable, String newVariable) {
+    public synchronized Variable getVariable(String variable) {
+        ensureExistingVariable(variable);
+        return variables.get(variable);
+    }
+
+    @Override
+    public synchronized void bind(String existingVariable, String newVariable) {
         ensureExistingVariable(existingVariable);
         ensureEmptyVariable(newVariable);
         Variable reference = variables.get(existingVariable);
@@ -56,21 +61,21 @@ public final class VariablesFactory implements Variables {
     }
 
     @Override
-    public Collection<Variable> allVariables() {
+    public synchronized Collection<Variable> allVariables() {
         return variables.values();
     }
 
-    public boolean containsVariable(String var) {
+    public synchronized boolean containsVariable(String var) {
         return variables.containsKey(var);
     }
 
-    private void ensureExistingVariable(String var) {
+    private synchronized void ensureExistingVariable(String var) {
         if (!containsVariable(var)) {
             throw new RuntimeException("no variable " + var + " found");
         }
     }
 
-    private void ensureEmptyVariable(String var) {
+    private synchronized void ensureEmptyVariable(String var) {
         if (containsVariable(var)) {
             throw new RuntimeException("variable " + var + " already exists");
         }

@@ -17,7 +17,7 @@ public abstract class UnaryCommand<T> extends Command<T> {
     @Override
     public void setArgs(String... args) throws InvalidArgumentsException {
         String commandName = getName();
-        if (args.length <= 1) {
+        if (args.length != 2) {
             throw new InvalidArgumentsException("Command " + commandName +
                     " was not given enough parameters");
         } else if (!args[0].equals(commandName)) {
