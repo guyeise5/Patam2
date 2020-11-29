@@ -2,6 +2,7 @@ package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.Exceptions.CommandNotFoundException;
 import Interpreter.Commands.Exceptions.InvalidArgumentsException;
+import Interpreter.Commands.util.AssignVariableCommand;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -31,15 +32,27 @@ public abstract class Command<T> {
     public static Command parse(String s) throws InvalidArgumentsException, CommandNotFoundException {
         String[] args = s.split(" ");
         try {
-            Command ret = CommandTranslator.getInstance().translate(args[0]).getDeclaredConstructor().newInstance();
-            ret.setArgs(args);
-            return ret;
+            final Command parsedCommand;
+            if (s.contains("=")){
+                parsedCommand = new AssignVariableCommand();
+            } else {
+                parsedCommand = CommandTranslator.getInstance().translate(args[0]).getDeclaredConstructor().newInstance();
+            }
+            parsedCommand.setArgs(args);
+            return parsedCommand;
 
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
 
         throw new RuntimeException();
+    }
+
+    /***
+     * Assign the value of variables
+     */
+    public void parseVariablesIntoNumbers() {
+
     }
 
     public String[] getArgs() {

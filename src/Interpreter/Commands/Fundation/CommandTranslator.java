@@ -1,9 +1,11 @@
 package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.Exceptions.CommandNotFoundException;
+import Interpreter.Commands.util.*;
 import Interpreter.Commands.util.Number;
-import Interpreter.Commands.util.Return;
+import test.MyInterpreter;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,9 @@ public class CommandTranslator {
 
     private CommandTranslator() {
         this.commands = new HashMap<>();
-        this.commands.put("return", Return.class);
+        this.commands.put("return", ReturnCommand.class);
+        this.commands.put("var", CreateVariableCommand.class);
+        this.commands.put("=", AssignVariableCommand.class);
     }
 
     public static CommandTranslator getInstance() {
@@ -34,6 +38,10 @@ public class CommandTranslator {
             return Number.class;
         }
         throw new CommandNotFoundException("Command: " + commandName + " is not a valid command");
+    }
+
+    public Collection<Class<? extends Command<?>>> allCommands() {
+        return commands.values();
     }
 
     public void addCommand(String key, Class<? extends Command<?>> cmd) {
