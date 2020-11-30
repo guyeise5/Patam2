@@ -9,4 +9,8 @@ public class CommandException extends  Exception {
     public CommandException() {
 
     }
+
+    public CommandException(Exception e) {
+        super(e);
+    }
 }

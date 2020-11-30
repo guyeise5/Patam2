@@ -8,4 +8,8 @@ public class InvalidArgumentsException extends CommandException{
     public InvalidArgumentsException() {
         super();
     }
+
+    public InvalidArgumentsException(Exception e) {
+        super(e);
+    }
 }
