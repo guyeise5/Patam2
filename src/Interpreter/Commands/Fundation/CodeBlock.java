@@ -25,10 +25,10 @@ public class CodeBlock {
         Class<? extends Command<?>> type = CommandTranslator.getInstance().translate(commandName);
         Command<?> cmd = type.getDeclaredConstructor().newInstance();
         if(UnaryCommand.class.isAssignableFrom(type) || AssignVariableCommand.class.isAssignableFrom(type)) {
-            cmd.setArgs(commandName, shiftLine(code));
+            cmd.setArgs(commandName, shiftLine());
         }
         if(ConditionalCommand.class.isAssignableFrom(type)) {
-            Condition con = Condition.parse(shiftBlock('(',')'));
+            Condition con = Condition.parse(shiftTo('{'));
             CodeBlock cob = new CodeBlock(shiftBlock('{', '}'));
             ((ConditionalCommand)cmd).setCondition(con);
             ((ConditionalCommand)cmd).setCodeBlock(cob);
@@ -82,7 +82,7 @@ public class CodeBlock {
         return ret;
     }
 
-    private String shiftLine(String code) {
+    private String shiftLine() {
         String[] tmp = code.split("\n", 2);
         String ret = tmp[0];
         if(tmp.length > 1) {
@@ -90,6 +90,13 @@ public class CodeBlock {
         }else {
             this.code = "";
         }
+        return ret;
+    }
+
+    private String shiftTo(char c) {
+        int idx = code.indexOf(c);
+        String ret = code.substring(0, idx);
+        code = code.substring(idx);
         return ret;
     }
 

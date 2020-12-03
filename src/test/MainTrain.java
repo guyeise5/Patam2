@@ -22,7 +22,7 @@ public class MainTrain {
 		String code = "";
 		code += "var x=3\n";
 		// code += "x=4\n"; // Not working
-		code += "while (3 < 5) {\n";
+		code += "while 3 < 5 {\n";
 		code += "	return 2\n";
 		code += "	return 1\n";
 		code += "}\n";
