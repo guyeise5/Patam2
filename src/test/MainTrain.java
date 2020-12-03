@@ -1,18 +1,47 @@
 package test;
 
-import Interpreter.Commands.Exceptions.CommandNotFoundException;
-import Interpreter.Commands.Exceptions.InvalidArgumentsException;
+import Interpreter.Commands.Exceptions.*;
+import Interpreter.Commands.Fundation.CodeBlock;
 import Interpreter.Commands.Fundation.Command;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class MainTrain {
 
 	public static void main(String[] args) {
-		prodMain(args);
+		// prodMain(args);
+		try {
+			testCodeBlock();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
+	public static void testCodeBlock() {
+		String code = "";
+		code += "var x=3\n";
+		// code += "x=4\n"; // Not working
+		code += "while (3 < 5) {\n";
+		code += "	return 2\n";
+		code += "	return 1\n";
+		code += "}\n";
+		code += "return 2";
 
+		CodeBlock x = new CodeBlock(code);
+
+		try {
+			Command<?> cmd = x.pop();  // var x=3
+			cmd=x.pop(); // while (...) { ... }
+			cmd=x.pop(); // return 2
+			cmd=x.pop(); // Exception
+		}
+		catch (InterpreterException | CommandNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | InvalidArgumentsException | InvalidConditionFormatException | NoCommandsLeftException e) {
+			e.printStackTrace();
+		}
+
+
+	}
 	public static void testMain(String[] args)  {
 		try {
 			Command.parse("return 3 * 5 - 8+2").execute();
@@ -21,6 +50,20 @@ public class MainTrain {
 		} catch (InvalidArgumentsException e) {
 			System.out.println("impossible arguments");
 			System.out.println(e.getMessage());
+		} catch (NoCommandsLeftException e) {
+			e.printStackTrace();
+		} catch (InterpreterException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InvalidConditionFormatException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
 		}
 		System.out.println("done");
 	}

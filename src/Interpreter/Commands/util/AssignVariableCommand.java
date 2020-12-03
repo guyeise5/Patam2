@@ -1,11 +1,12 @@
 package Interpreter.Commands.util;
 
 import Interpreter.CalcExpresion;
-import Interpreter.Commands.Exceptions.CommandNotFoundException;
-import Interpreter.Commands.Exceptions.InvalidArgumentsException;
+import Interpreter.Commands.Exceptions.*;
 import Interpreter.Commands.Fundation.Command;
 import Interpreter.Commands.Fundation.Variables;
 import test.MyInterpreter;
+
+import java.lang.reflect.InvocationTargetException;
 
 public final class AssignVariableCommand extends Command<Void> {
 
@@ -25,7 +26,7 @@ public final class AssignVariableCommand extends Command<Void> {
         String leftWingAssignment = entireCommand.substring(0, indexOfAssign);
         String rightWingAssignment = entireCommand.substring(indexOfAssign + 1, entireCommand.length() );
 
-        final Variable variable;
+        Variable variable = null;
         Variables variables = MyInterpreter.getInstance().getVariablesFactory();
 
         String createVariableName = CreateVariableCommand.CREATE_VARIABLE_NAME;
@@ -34,6 +35,20 @@ public final class AssignVariableCommand extends Command<Void> {
                 variable = (Variable) Command.parse(leftWingAssignment).execute();
             } catch (CommandNotFoundException exception) {
                 throw new InvalidArgumentsException("impossible to create a command");
+            } catch (NoCommandsLeftException e) {
+                e.printStackTrace();
+            } catch (InterpreterException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InvalidConditionFormatException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
             }
         } else {
             String variableName = leftWingAssignment.replace(" ", "");

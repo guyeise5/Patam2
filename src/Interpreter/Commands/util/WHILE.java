@@ -1,13 +1,16 @@
 package Interpreter.Commands.util;
 
+import Interpreter.Commands.Exceptions.*;
 import Interpreter.Commands.Fundation.Command;
 import Interpreter.Commands.Fundation.ConditionalCommand;
 
-public class WHILE extends ConditionalCommand<Void> {
+import java.lang.reflect.InvocationTargetException;
+
+public class WHILE extends ConditionalCommand {
     @Override
-    public Void execute() {
+    public Void execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException {
         while(this.getCondition().calculate()) {
-            this.getCommands().forEach(Command::execute);
+            this.getCodeBlock().execute();
         }
 
         return null;

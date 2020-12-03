@@ -5,13 +5,13 @@ import Interpreter.Commands.Exceptions.InvalidArgumentsException;
 import Interpreter.Commands.Fundation.UnaryCommand;
 import test.MyInterpreter;
 
-public final class ReturnCommand extends UnaryCommand<Integer> {
+public class RETURN extends UnaryCommand<Integer> {
 
     private Integer returnStatus;
 
     public static final String RETURN_COMMAND_NAME = "return";
 
-    public ReturnCommand() {
+    public RETURN() {
         super(RETURN_COMMAND_NAME);
     }
 

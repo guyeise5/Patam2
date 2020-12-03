@@ -2,7 +2,6 @@ package Interpreter.Commands.Fundation;
 
 import Expression.Expression;
 import Interpreter.CalcExpresion;
-import Interpreter.Commands.Exceptions.CalculateException;
 import Interpreter.Commands.Exceptions.InvalidConditionFormatException;
 import Interpreter.Commands.Exceptions.ParseException;
 
@@ -54,10 +53,10 @@ public class Condition {
     private enum Operator {
         GE(">="),
         LE("<="),
+        EQ("=="),
         NE("!="),
         GT(">"),
-        LT("<"),
-        EQ("=");
+        LT("<");
 
 
         private final String value;
