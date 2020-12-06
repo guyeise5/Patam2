@@ -2,8 +2,7 @@ package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.Exceptions.CommandNotFoundException;
 import Interpreter.Commands.util.*;
-import Interpreter.Commands.util.Number;
-import test.MyInterpreter;
+import Interpreter.Commands.util.NUMBER;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,9 +16,11 @@ public class CommandTranslator {
 
     private CommandTranslator() {
         this.commands = new HashMap<>();
-        this.commands.put("return", ReturnCommand.class);
+        this.commands.put("return", RETURN.class);
         this.commands.put("var", CreateVariableCommand.class);
-        this.commands.put("=", AssignVariableCommand.class);
+        this.commands.put("=", VAR.class);
+        this.commands.put("while",WHILE.class);
+        this.commands.put("if", IF.class);
     }
 
     public static CommandTranslator getInstance() {
@@ -31,11 +32,18 @@ public class CommandTranslator {
     }
 
     public Class<? extends Command<?>> translate(String commandName) throws CommandNotFoundException {
+        commandName = commandName.replace("\t", "");
+
+        if (commandName.contains(AssignVariableCommand.ASSIGN_KEYWORD) && !commandName.contains("==")) {
+            return AssignVariableCommand.class;
+        }
         if(this.commands.containsKey(commandName)){
             return commands.get(commandName);
         }
         else if(tryParseDouble(commandName)){
-            return Number.class;
+            return NUMBER.class;
+        }else if (commandName.isBlank()){
+            return NOP.class;
         }
         throw new CommandNotFoundException("Command: " + commandName + " is not a valid command");
     }

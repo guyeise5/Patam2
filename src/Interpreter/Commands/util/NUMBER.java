@@ -4,7 +4,7 @@ import Expression.Expression;
 import Interpreter.Commands.Exceptions.InvalidArgumentsException;
 import Interpreter.Commands.Fundation.Command;
 
-public class Number extends Command<Double> implements Expression {
+public class NUMBER extends Command<Double> implements Expression {
     double value;
 
     @Override

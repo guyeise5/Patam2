@@ -1,8 +1,7 @@
 package Interpreter.Commands.Fundation;
 
-import Interpreter.Commands.Exceptions.CommandNotFoundException;
-import Interpreter.Commands.Exceptions.InvalidArgumentsException;
-import Interpreter.Commands.util.AssignVariableCommand;
+import Interpreter.Commands.Exceptions.*;
+import Interpreter.Commands.util.VAR;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -20,7 +19,7 @@ public abstract class Command<T> {
 
     private String[] args;
 
-    public abstract  T execute();
+    public abstract  T execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException;
     public String getName() {
         return this.commandName;
     }
@@ -29,12 +28,12 @@ public abstract class Command<T> {
         this.commandName = commandName;
     }
 
-    public static Command parse(String s) throws InvalidArgumentsException, CommandNotFoundException {
+    public static Command<?> parse(String s) throws InvalidArgumentsException, CommandNotFoundException {
         String[] args = s.split(" ");
         try {
-            final Command parsedCommand;
+            final Command<?> parsedCommand;
             if (s.contains("=")){
-                parsedCommand = new AssignVariableCommand();
+                parsedCommand = new VAR();
             } else {
                 parsedCommand = CommandTranslator.getInstance().translate(args[0]).getDeclaredConstructor().newInstance();
             }
@@ -62,5 +61,4 @@ public abstract class Command<T> {
     public void setArgs(String... args) throws InvalidArgumentsException {
         this.args = args;
     }
-
 }
