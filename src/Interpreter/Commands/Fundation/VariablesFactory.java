@@ -21,7 +21,7 @@ public final class VariablesFactory implements Variables {
      * Variables class is a singleton, do not allow access
      */
     private VariablesFactory() {
-        dropAllVariables();
+        clean();
     }
 
     @Override
@@ -68,7 +68,7 @@ public final class VariablesFactory implements Variables {
     }
 
     @Override
-    public synchronized void dropAllVariables() {
+    public synchronized void clean() {
         this.variables = new HashMap<>();
     }
 

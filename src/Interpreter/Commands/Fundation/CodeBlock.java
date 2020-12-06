@@ -1,6 +1,8 @@
 package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.Exceptions.*;
+import Interpreter.Commands.util.AssignVariableCommand;
+import Interpreter.Commands.util.RETURN;
 import Interpreter.Commands.util.VAR;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,12 +18,23 @@ public class CodeBlock {
 
     // Returns the first command in the block.
     public Command<?> pop() throws NoCommandsLeftException, CommandNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, InvalidArgumentsException, InterpreterException, InvalidConditionFormatException {
-        if(this.code.equals("")) {
+        if (this.code.equals("")) {
             throw new NoCommandsLeftException();
+
+        }
+        Class<? extends Command<?>> type;
+        Command<?> cmd;
+        String s = code.split("\n", 2)[0];
+        if(s.contains("=") && !s.contains("==") && !s.contains(">=") && !s.contains("<=") && !s.contains("!=")){
+            s = cleanStart(s);
+            cmd = new AssignVariableCommand();
+            cmd.setArgs(s);
+            shiftLine();
+            return cmd;
         }
         String commandName = cleanStart(shiftWord());
-        Class<? extends Command<?>> type = CommandTranslator.getInstance().translate(commandName);
-        Command<?> cmd = type.getDeclaredConstructor().newInstance();
+        type = CommandTranslator.getInstance().translate(commandName);
+        cmd = type.getDeclaredConstructor().newInstance();
         if(UnaryCommand.class.isAssignableFrom(type) || VAR.class.isAssignableFrom(type)) {
             cmd.setArgs(commandName, shiftLine());
         }
@@ -35,12 +48,19 @@ public class CodeBlock {
         return cmd;
     }
 
-    public void execute() throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, CommandNotFoundException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException {
+    public Integer execute() throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, CommandNotFoundException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException {
         String code_backup = this.code;
+        Integer ret = 0;
         while(!this.code.equals("")) {
-            pop().execute();
+            Command<?> pop = pop();
+            if(pop instanceof RETURN) {
+                ret = ((RETURN) pop).execute();
+                break;
+            }
+            pop.execute();
         }
         this.code = code_backup;
+        return ret;
     }
 
     private String shiftWord(){
@@ -98,17 +118,28 @@ public class CodeBlock {
         return ret;
     }
 
+    public boolean isEmpty() {
+        return this.code.isEmpty();
+    }
     /**
      * Removes all the whitespaces and tabs from the line
      * @param line
      * @return
      */
     private String cleanStart(String line) {
-        int s = 0;
-        while(line.charAt(s) == ' ' || line.charAt(s) == '\t'){
-            s++;
+        try {
+            if(line.isEmpty()) {
+                return "";
+            }
+            int s = 0;
+            while(s != line.length() && (line.charAt(s) == ' ' || line.charAt(s) == '\t')){
+                s++;
+            }
+
+            return line.substring(s);
+        } catch (Exception e) {
+            throw e;
         }
-        return line.substring(s);
     }
 
 }

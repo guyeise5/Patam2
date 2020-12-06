@@ -21,6 +21,6 @@ public interface Variables {
 
     Collection<Variable> allVariables();
 
-    void dropAllVariables();
+    void clean();
 
 }

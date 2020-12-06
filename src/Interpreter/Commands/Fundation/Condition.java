@@ -58,6 +58,9 @@ public class Condition {
         return ret;
     }
 
+    public String getText(){
+        return this.text;
+    }
     /**
      *
      * @param txt - (x + 3) * 2
@@ -88,6 +91,10 @@ public class Condition {
 
         public String getValue() {
             return this.value;
+        }
+
+        public boolean ContaintsEQUALS() {
+            return value.contains("=");
         }
     }
     
