@@ -8,9 +8,9 @@ import test.MyInterpreter;
 
 import java.lang.reflect.InvocationTargetException;
 
-public final class AssignVariableCommand extends Command<Void> {
+public final class VAR extends Command<Void> {
 
-    public static final String ASSIGN_KEYWORD = "=";
+    private static final String ASSIGN_KEYWORD = "=";
     @Override
     public Void execute() {
         return null;
@@ -35,19 +35,7 @@ public final class AssignVariableCommand extends Command<Void> {
                 variable = (Variable) Command.parse(leftWingAssignment).execute();
             } catch (CommandNotFoundException exception) {
                 throw new InvalidArgumentsException("impossible to create a command");
-            } catch (NoCommandsLeftException e) {
-                e.printStackTrace();
-            } catch (InterpreterException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InvalidConditionFormatException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
+            } catch (NoCommandsLeftException | IllegalAccessException | InvocationTargetException | InvalidConditionFormatException | NoSuchMethodException | InstantiationException | InterpreterException e) {
                 e.printStackTrace();
             }
         } else {
@@ -58,10 +46,12 @@ public final class AssignVariableCommand extends Command<Void> {
         if (rightWingAssignment.contains("bind")) {
             String bindToVariable = rightWingAssignment
                     .replace("bind", "").replace(" ", "");
+            assert variable != null;
             variables.bind(variable.name, bindToVariable);
         } else {
             String expressionParseVariables = MyInterpreter.getInstance().assignVariableValues(rightWingAssignment);
             double calcExpression = CalcExpresion.calc(expressionParseVariables);
+            assert variable != null;
             variables.assignValue(variable.name, calcExpression);
         }
     }

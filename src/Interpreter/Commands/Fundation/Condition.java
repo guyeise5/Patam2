@@ -2,18 +2,21 @@ package Interpreter.Commands.Fundation;
 
 import Expression.Expression;
 import Interpreter.CalcExpresion;
+import Interpreter.Commands.Exceptions.InterpreterException;
 import Interpreter.Commands.Exceptions.InvalidConditionFormatException;
 import Interpreter.Commands.Exceptions.ParseException;
+import test.MyInterpreter;
 
 public class Condition {
     private String text;
 
-    private Expression left, right;
+    private String left;
+    private String right;
     private Operator operator;
 
-    public Boolean calculate() {
-        double c_left = left.calculate();
-        double c_right = right.calculate();
+    public Boolean calculate() throws ParseException {
+        double c_left = assignExpression(left).calculate();
+        double c_right = assignExpression(right).calculate();
         return switch (operator) {
             case GT -> c_left > c_right;
             case LT -> c_left < c_right;
@@ -23,7 +26,14 @@ public class Condition {
             case LE -> c_left <= c_right;
         };
     }
-    
+
+    /**
+     *
+     * @param text - 3 + 2 < 6
+     * @return
+     * @throws InvalidConditionFormatException
+     * @throws ParseException
+     */
     public static Condition parse(String text) throws InvalidConditionFormatException, ParseException {
         Operator operator  = null;
         for (Operator opr: Operator.values() ) {
@@ -40,11 +50,23 @@ public class Condition {
         String[] expression = text.split(operator.getValue());
 
         Condition ret = new Condition();
-        ret.left = CalcExpresion.parseExpression(expression[0]);
-        ret.right = CalcExpresion.parseExpression(expression[1]);
+        ret.left = expression[0];
+        // ret.left = CalcExpresion.parseExpression(expression[0]);
+        ret.right = expression[1];
         ret.operator = operator;
 
         return ret;
+    }
+
+    /**
+     *
+     * @param txt - (x + 3) * 2
+     * @return - ( 5 + 3 ) * 2
+     */
+    private static Expression assignExpression(String txt) throws ParseException {
+        String simpleExpression = MyInterpreter.getInstance().assignVariableValues(txt); // without variables (after assign)
+        return CalcExpresion.parseExpression(simpleExpression);
+
     }
 
     // The operators are sorted meaning

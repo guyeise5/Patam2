@@ -30,6 +30,7 @@ public abstract class UnaryCommand<T> extends Command<T> {
         }
         setCommandArgument(argumentBuffer.toString());
         super.setArgs(args);
+
     }
 
     protected void setCommandArgument(String commandArgument) {

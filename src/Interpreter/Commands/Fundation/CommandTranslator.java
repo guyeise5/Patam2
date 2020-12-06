@@ -18,7 +18,7 @@ public class CommandTranslator {
         this.commands = new HashMap<>();
         this.commands.put("return", RETURN.class);
         this.commands.put("var", CreateVariableCommand.class);
-        this.commands.put("=", AssignVariableCommand.class);
+        this.commands.put("=", VAR.class);
         this.commands.put("while",WHILE.class);
         this.commands.put("if", IF.class);
     }
@@ -32,11 +32,18 @@ public class CommandTranslator {
     }
 
     public Class<? extends Command<?>> translate(String commandName) throws CommandNotFoundException {
+        commandName = commandName.replace("\t", "");
+
+        if (commandName.contains(AssignVariableCommand.ASSIGN_KEYWORD) && !commandName.contains("==")) {
+            return AssignVariableCommand.class;
+        }
         if(this.commands.containsKey(commandName)){
             return commands.get(commandName);
         }
         else if(tryParseDouble(commandName)){
             return NUMBER.class;
+        }else if (commandName.isBlank()){
+            return NOP.class;
         }
         throw new CommandNotFoundException("Command: " + commandName + " is not a valid command");
     }

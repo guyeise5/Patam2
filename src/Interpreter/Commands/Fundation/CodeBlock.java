@@ -1,12 +1,9 @@
 package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.Exceptions.*;
-import Interpreter.Commands.util.AssignVariableCommand;
+import Interpreter.Commands.util.VAR;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class CodeBlock {
     private String code;
@@ -14,6 +11,7 @@ public class CodeBlock {
 
     public CodeBlock(String code) {
         this.code = code;
+
     }
 
     // Returns the first command in the block.
@@ -21,10 +19,10 @@ public class CodeBlock {
         if(this.code.equals("")) {
             throw new NoCommandsLeftException();
         }
-        String commandName = shiftWord();
+        String commandName = cleanStart(shiftWord());
         Class<? extends Command<?>> type = CommandTranslator.getInstance().translate(commandName);
         Command<?> cmd = type.getDeclaredConstructor().newInstance();
-        if(UnaryCommand.class.isAssignableFrom(type) || AssignVariableCommand.class.isAssignableFrom(type)) {
+        if(UnaryCommand.class.isAssignableFrom(type) || VAR.class.isAssignableFrom(type)) {
             cmd.setArgs(commandName, shiftLine());
         }
         if(ConditionalCommand.class.isAssignableFrom(type)) {
@@ -100,5 +98,17 @@ public class CodeBlock {
         return ret;
     }
 
+    /**
+     * Removes all the whitespaces and tabs from the line
+     * @param line
+     * @return
+     */
+    private String cleanStart(String line) {
+        int s = 0;
+        while(line.charAt(s) == ' ' || line.charAt(s) == '\t'){
+            s++;
+        }
+        return line.substring(s);
+    }
 
 }

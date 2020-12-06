@@ -1,10 +1,9 @@
 package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.Exceptions.*;
-import Interpreter.Commands.util.AssignVariableCommand;
+import Interpreter.Commands.util.VAR;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 public abstract class Command<T> {
 
@@ -34,7 +33,7 @@ public abstract class Command<T> {
         try {
             final Command<?> parsedCommand;
             if (s.contains("=")){
-                parsedCommand = new AssignVariableCommand();
+                parsedCommand = new VAR();
             } else {
                 parsedCommand = CommandTranslator.getInstance().translate(args[0]).getDeclaredConstructor().newInstance();
             }

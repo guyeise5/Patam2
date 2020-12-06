@@ -3,6 +3,8 @@ package test;
 import Interpreter.Commands.Exceptions.*;
 import Interpreter.Commands.Fundation.CodeBlock;
 import Interpreter.Commands.Fundation.Command;
+import Interpreter.Commands.Fundation.ConditionalCommand;
+import Interpreter.Commands.util.NOP;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
@@ -22,7 +24,10 @@ public class MainTrain {
 		String code = "";
 		code += "var x=3\n";
 		// code += "x=4\n"; // Not working
-		code += "while 3 < 5 {\n";
+		code += "while x < 5 {\n";
+		code += "	while 2 < 3 {\n";
+		code += "		return 5\n";
+		code += "	}\n";
 		code += "	return 2\n";
 		code += "	return 1\n";
 		code += "}\n";
@@ -32,9 +37,15 @@ public class MainTrain {
 
 		try {
 			Command<?> cmd = x.pop();  // var x=3
+			cmd.execute();
 			cmd=x.pop(); // while (...) { ... }
-			cmd=x.pop(); // return 2
-			cmd=x.pop(); // Exception
+			((ConditionalCommand)cmd).getCondition().calculate();
+			Command<?> cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
+			cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
+			cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
+			cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
+			new NOP();
+
 		}
 		catch (InterpreterException | CommandNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | InvalidArgumentsException | InvalidConditionFormatException | NoCommandsLeftException e) {
 			e.printStackTrace();
