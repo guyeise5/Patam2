@@ -4,9 +4,7 @@ import Interpreter.Commands.Exceptions.*;
 import Interpreter.Commands.Fundation.CodeBlock;
 import Interpreter.Commands.Fundation.Command;
 import Interpreter.Commands.Fundation.ConditionalCommand;
-import Interpreter.Commands.util.AssignVariableCommand;
 import Interpreter.Commands.util.CreateVariableCommand;
-import Interpreter.Commands.util.NOP;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
@@ -60,6 +58,8 @@ public class MainTrain {
 		} catch (InvalidConditionFormatException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (CalculateException e) {
 			e.printStackTrace();
 		}
 		System.out.println("done");

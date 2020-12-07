@@ -50,7 +50,7 @@ public final class AssignVariableCommand extends Command<Void> {
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
-        } else {
+        } else {bindTo
             String variableName = leftWingAssignment.replace(" ", "");
             variable = variables.getVariable(variableName);
         }
@@ -58,7 +58,7 @@ public final class AssignVariableCommand extends Command<Void> {
         if (rightWingAssignment.contains("bind")) {
             String bindToVariable = rightWingAssignment
                     .replace("bind", "").replace(" ", "");
-            variables.bind(variable.name, bindToVariable);
+            variables.bind(bindToVariable, variable.name);
         } else {
             String expressionParseVariables = MyInterpreter.getInstance().assignVariableValues(rightWingAssignment);
             double calcExpression = CalcExpresion.calc(expressionParseVariables);

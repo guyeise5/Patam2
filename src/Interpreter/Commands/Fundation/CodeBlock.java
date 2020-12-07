@@ -38,17 +38,20 @@ public class CodeBlock {
         if(UnaryCommand.class.isAssignableFrom(type) || VAR.class.isAssignableFrom(type)) {
             cmd.setArgs(commandName, shiftLine());
         }
-        if(ConditionalCommand.class.isAssignableFrom(type)) {
+        else if(ConditionalCommand.class.isAssignableFrom(type)) {
             Condition con = Condition.parse(shiftTo('{'));
             CodeBlock cob = new CodeBlock(shiftBlock('{', '}'));
             ((ConditionalCommand)cmd).setCondition(con);
             ((ConditionalCommand)cmd).setCodeBlock(cob);
         }
+        else if (BinaryCommand.class.isAssignableFrom(type)) {
+            cmd.setArgs(commandName, shiftWord(), shiftWord());
+        }
 
         return cmd;
     }
 
-    public Integer execute() throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, CommandNotFoundException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException {
+    public Integer execute() throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, CommandNotFoundException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException, CalculateException {
         String code_backup = this.code;
         Integer ret = 0;
         while(!this.code.equals("")) {

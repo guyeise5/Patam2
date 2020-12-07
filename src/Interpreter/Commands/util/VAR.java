@@ -37,6 +37,8 @@ public final class VAR extends Command<Void> {
                 throw new InvalidArgumentsException("impossible to create a command");
             } catch (NoCommandsLeftException | IllegalAccessException | InvocationTargetException | InvalidConditionFormatException | NoSuchMethodException | InstantiationException | InterpreterException e) {
                 e.printStackTrace();
+            } catch (CalculateException e) {
+                e.printStackTrace();
             }
         } else {
             String variableName = leftWingAssignment.replace(" ", "");

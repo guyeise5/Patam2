@@ -1,11 +1,6 @@
 package Interpreter.Commands.Fundation;
 
 import Interpreter.Commands.Exceptions.InvalidArgumentsException;
-import jdk.jshell.spi.ExecutionControl;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 public abstract class ConditionalCommand extends Command<Void> {
 
