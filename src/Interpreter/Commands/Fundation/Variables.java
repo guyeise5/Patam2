@@ -13,13 +13,15 @@ public interface Variables {
 
     boolean containsVariable(String variableName);
 
-    double getValue(String variable);
+    Double getValue(String variable);
 
     Variable getVariable(String variable);
 
     void bind(String existingVariable, String newVariable);
 
     Collection<Variable> allVariables();
+
+    Collection<String> allVariableNames();
 
     void clean();
 

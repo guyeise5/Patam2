@@ -26,9 +26,12 @@ public class MyInterpreter {
 
 	public String assignVariableValues(String command) {
 		String replacedVariableWithValueCommand = command;
-		for (Variable variable : variables.allVariables()) {
-			replacedVariableWithValueCommand =
-					replacedVariableWithValueCommand.replace(variable.name, String.valueOf(variable.value));
+		for (String variableName : variables.allVariableNames()) {
+			Double value = variables.getValue(variableName);
+			if (value != null) {
+				replacedVariableWithValueCommand =
+						replacedVariableWithValueCommand.replace(variableName, String.valueOf(value));
+			}
 		}
 		return replacedVariableWithValueCommand;
 	}
@@ -51,10 +54,10 @@ public class MyInterpreter {
 		} catch (Exception ignored) {}
 		String code = String.join("\n", lines);
 		CodeBlock cb = new CodeBlock(code);
-		System.out.println(code);
 		try {
 			return cb.execute();
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			return 1;
 		}
 	}

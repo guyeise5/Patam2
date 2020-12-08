@@ -37,9 +37,6 @@ public class CommandTranslator {
     public Class<? extends Command<?>> translate(String commandName) throws CommandNotFoundException {
         commandName = commandName.replace("\t", "");
 
-        if (commandName.contains(AssignVariableCommand.ASSIGN_KEYWORD) && !commandName.contains("==")) {
-            return AssignVariableCommand.class;
-        }
         if(this.commands.containsKey(commandName)){
             return commands.get(commandName);
         }

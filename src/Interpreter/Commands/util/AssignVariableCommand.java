@@ -35,22 +35,10 @@ public final class AssignVariableCommand extends Command<Void> {
                 variable = (Variable) Command.parse(leftWingAssignment).execute();
             } catch (CommandNotFoundException exception) {
                 throw new InvalidArgumentsException("impossible to create a command");
-            } catch (NoCommandsLeftException e) {
-                e.printStackTrace();
-            } catch (InterpreterException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InvalidConditionFormatException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
+            } catch (NoCommandsLeftException | CalculateException | NoSuchMethodException | InvalidConditionFormatException | InvocationTargetException | IllegalAccessException | InstantiationException | InterpreterException e) {
                 e.printStackTrace();
             }
-        } else {bindTo
+        } else {
             String variableName = leftWingAssignment.replace(" ", "");
             variable = variables.getVariable(variableName);
         }

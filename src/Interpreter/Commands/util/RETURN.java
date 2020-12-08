@@ -3,6 +3,7 @@ package Interpreter.Commands.util;
 import Interpreter.CalcExpresion;
 import Interpreter.Commands.Exceptions.InvalidArgumentsException;
 import Interpreter.Commands.Fundation.UnaryCommand;
+import Interpreter.Commands.Fundation.VariablesFactory;
 import test.MyInterpreter;
 
 public class RETURN extends UnaryCommand<Integer> {
@@ -33,7 +34,8 @@ public class RETURN extends UnaryCommand<Integer> {
      */
     @Override
     public void setArgs(String[] args) throws InvalidArgumentsException {
-        String[] parseVariblesArguemnts = MyInterpreter.getInstance().assignVariableValues(args);
+        MyInterpreter instance = MyInterpreter.getInstance();
+        String[] parseVariblesArguemnts = instance.assignVariableValues(args);
         super.setArgs(parseVariblesArguemnts);
         String commandArgument = getCommandArgument();
         this.returnStatus = (int) CalcExpresion.calc(commandArgument);

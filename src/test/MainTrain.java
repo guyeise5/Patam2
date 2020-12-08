@@ -12,7 +12,6 @@ import java.util.Random;
 public class MainTrain {
 
 	public static void main(String[] args) {
-		// prodMain(args);
 		try {
 			prodMain(null);
 		} catch (Exception e) {
@@ -71,7 +70,7 @@ public class MainTrain {
 		Simulator sim=new Simulator(port); // sim_client on port+1, sim_server on port
 		
 		int rand=r.nextInt(1000);
-		
+
 		String[] test1={
 				"return "+rand+" * 5 - (8+2)"	
 		};
@@ -85,24 +84,23 @@ public class MainTrain {
 				"var y=x+3",	
 				"return y"	
 		};
-		
+
 		if(MyInterpreter.interpret(test2)!=rand+3)
 			System.out.println("failed test2 (-20)");
-
 		String[] test3={
 				"openDataServer "+(port+1)+" 10",
 				"connect 127.0.0.1 "+port,
 				"var x",
 				"x = bind simX",
-				"var y = bind simX",	
+				"var y = bind simX",
 				"x = "+rand*2,
 				"disconnect",
-				"return y"	
+				"return y"
 		};
-		
+
 		if(MyInterpreter.interpret(test3)!=rand*2)
 			System.out.println("failed test3 (-20)");
-
+		System.out.println("simX: "+sim.simX+ " simY: "+sim.simY+ " simZ: "+sim.simZ);
 		String[] test4={
 				"openDataServer "+ (port+1)+" 10",
 				"connect 127.0.0.1 "+port,
@@ -113,10 +111,13 @@ public class MainTrain {
 				"disconnect",
 				"return x+y*z"	
 		};
-		
-		if(MyInterpreter.interpret(test4)!=sim.simX+sim.simY*sim.simZ)
+
+		int weGot = MyInterpreter.interpret(test4);
+		System.out.println("We got: " + weGot);
+		System.out.println("He got: " + String.valueOf(sim.simX+sim.simY*sim.simZ));
+		if(weGot!=sim.simX+sim.simY*sim.simZ)
 			System.out.println("failed test4 (-20)");
-				
+/*
 		String[] test5={
 				"var x = 0",
 				"var y = "+rand,
@@ -129,7 +130,8 @@ public class MainTrain {
 		
 		if(MyInterpreter.interpret(test5)!=rand+2*5)
 			System.out.println("failed test5 (-20)");
-		
+*/
+
 		sim.close();
 		System.out.println("done");
 	}
