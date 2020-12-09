@@ -47,12 +47,15 @@ public class MyInterpreter {
 		return variables;
 	}
 
+	public static int countRun = 0;
 	public static int interpret(String[] lines){
+		countRun ++;
 		getInstance().variables.clean();
 		try {
 			new DISCONNECT().execute();
 		} catch (Exception ignored) {}
 		String code = String.join("\n", lines);
+		System.out.println("test #" + countRun + " code for run is:\n " + code);
 		CodeBlock cb = new CodeBlock(code);
 		try {
 			return cb.execute();

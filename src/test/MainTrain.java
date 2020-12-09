@@ -117,7 +117,7 @@ public class MainTrain {
 		System.out.println("He got: " + String.valueOf(sim.simX+sim.simY*sim.simZ));
 		if(weGot!=sim.simX+sim.simY*sim.simZ)
 			System.out.println("failed test4 (-20)");
-/*
+
 		String[] test5={
 				"var x = 0",
 				"var y = "+rand,
@@ -130,7 +130,7 @@ public class MainTrain {
 		
 		if(MyInterpreter.interpret(test5)!=rand+2*5)
 			System.out.println("failed test5 (-20)");
-*/
+
 
 		sim.close();
 		System.out.println("done");
@@ -140,7 +140,6 @@ public class MainTrain {
 		while(!cb.isEmpty()){
 			try {
 				Command<?> pop = cb.pop();
-				System.out.println(pop.getName());
 				if(pop instanceof CreateVariableCommand){
 					pop.execute();
 				}

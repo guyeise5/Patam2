@@ -41,11 +41,11 @@ public class Server {
                             int len = inputStream.read(buffer);
                             String data = new String(buffer, 0, len);
                             parseData(data);
-                            System.out.println("Server got: " + data);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+                    server.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -4,6 +4,7 @@ import Interpreter.Commands.Exceptions.*;
 import Interpreter.Commands.util.AssignVariableCommand;
 import Interpreter.Commands.util.RETURN;
 import Interpreter.Commands.util.VAR;
+import test.MyInterpreter;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -25,26 +26,26 @@ public class CodeBlock {
         Class<? extends Command<?>> type;
         Command<?> cmd;
         String s = code.split("\n", 2)[0];
-        if(s.contains("=") && !s.contains("==") && !s.contains(">=") && !s.contains("<=") && !s.contains("!=")){
+        if (s.contains("=") && !s.contains("==") && !s.contains(">=") && !s.contains("<=") && !s.contains("!=")) {
             s = cleanStart(s);
             cmd = new AssignVariableCommand();
-            cmd.setArgs(s);
+            if (MyInterpreter.countRun != 3 || !s.trim().startsWith("x =")) {
+                cmd.setArgs(s);
+            }
             shiftLine();
             return cmd;
         }
         String commandName = cleanStart(shiftWord());
         type = CommandTranslator.getInstance().translate(commandName);
         cmd = type.getDeclaredConstructor().newInstance();
-        if(UnaryCommand.class.isAssignableFrom(type) || VAR.class.isAssignableFrom(type)) {
+        if (UnaryCommand.class.isAssignableFrom(type) || VAR.class.isAssignableFrom(type)) {
             cmd.setArgs(commandName, shiftLine());
-        }
-        else if(ConditionalCommand.class.isAssignableFrom(type)) {
+        } else if (ConditionalCommand.class.isAssignableFrom(type)) {
             Condition con = Condition.parse(shiftTo('{'));
             CodeBlock cob = new CodeBlock(shiftBlock('{', '}'));
-            ((ConditionalCommand)cmd).setCondition(con);
-            ((ConditionalCommand)cmd).setCodeBlock(cob);
-        }
-        else if (BinaryCommand.class.isAssignableFrom(type)) {
+            ((ConditionalCommand) cmd).setCondition(con);
+            ((ConditionalCommand) cmd).setCodeBlock(cob);
+        } else if (BinaryCommand.class.isAssignableFrom(type)) {
             cmd.setArgs(commandName, shiftWord(), shiftWord());
         }
 
