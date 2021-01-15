@@ -13,7 +13,7 @@ public interface Variables {
 
     boolean containsVariable(String variableName);
 
-    double getValue(String variable);
+    Double getValue(String variable);
 
     Variable getVariable(String variable);
 
@@ -21,6 +21,8 @@ public interface Variables {
 
     Collection<Variable> allVariables();
 
-    void dropAllVariables();
+    Collection<String> allVariableNames();
+
+    void clean();
 
 }

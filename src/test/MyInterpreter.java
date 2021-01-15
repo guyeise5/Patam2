@@ -1,14 +1,11 @@
 package test;
 
-import Interpreter.Commands.Exceptions.*;
-import Interpreter.Commands.Fundation.Command;
+import Interpreter.Commands.Fundation.CodeBlock;
 import Interpreter.Commands.Fundation.Variables;
 import Interpreter.Commands.Fundation.VariablesFactory;
-import Interpreter.Commands.util.RETURN;
+import Interpreter.Commands.util.DISCONNECT;
 import Interpreter.Commands.util.Variable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.stream.Stream;
 
 public class MyInterpreter {
@@ -29,9 +26,12 @@ public class MyInterpreter {
 
 	public String assignVariableValues(String command) {
 		String replacedVariableWithValueCommand = command;
-		for (Variable variable : variables.allVariables()) {
-			replacedVariableWithValueCommand =
-					replacedVariableWithValueCommand.replace(variable.name, String.valueOf(variable.value));
+		for (String variableName : variables.allVariableNames()) {
+			Double value = variables.getValue(variableName);
+			if (value != null) {
+				replacedVariableWithValueCommand =
+						replacedVariableWithValueCommand.replace(variableName, String.valueOf(value));
+			}
 		}
 		return replacedVariableWithValueCommand;
 	}
@@ -47,38 +47,21 @@ public class MyInterpreter {
 		return variables;
 	}
 
+	public static int countRun = 0;
 	public static int interpret(String[] lines){
-
-		Object returnedCommandValue;
-		for (String line : lines) {
-
-			try {
-				Command command = Command.parse(line);
-				returnedCommandValue = command.execute();
-				if (command instanceof RETURN) {
-					return (int)returnedCommandValue;
-				}
-
-			} catch (InvalidArgumentsException | CommandNotFoundException e) {
-				System.out.println("Unable to run command: " + line);
-				System.out.println(e.getMessage());
-			} catch (NoCommandsLeftException e) {
-				e.printStackTrace();
-			} catch (InterpreterException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			} catch (InvalidConditionFormatException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			}
+		countRun ++;
+		getInstance().variables.clean();
+		try {
+			new DISCONNECT().execute();
+		} catch (Exception ignored) {}
+		String code = String.join("\n", lines);
+		System.out.println("test #" + countRun + " code for run is:\n " + code);
+		CodeBlock cb = new CodeBlock(code);
+		try {
+			return cb.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 1;
 		}
-
-		return DEFAULT_RETURN_STATUS;
 	}
 }

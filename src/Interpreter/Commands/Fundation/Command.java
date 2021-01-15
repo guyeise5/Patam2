@@ -19,9 +19,9 @@ public abstract class Command<T> {
 
     private String[] args;
 
-    public abstract  T execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException;
+    public abstract  T execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException, CalculateException;
     public String getName() {
-        return this.commandName;
+        return this.commandName == null ? this.getClass().getSimpleName().toLowerCase() : this.commandName;
     }
 
     public void setCommandName(String commandName) {

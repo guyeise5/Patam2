@@ -2,6 +2,7 @@ package Interpreter.Commands.Fundation;
 
 import Expression.Expression;
 import Interpreter.CalcExpresion;
+import Interpreter.Commands.Exceptions.CalculateException;
 import Interpreter.Commands.Exceptions.InterpreterException;
 import Interpreter.Commands.Exceptions.InvalidConditionFormatException;
 import Interpreter.Commands.Exceptions.ParseException;
@@ -14,17 +15,25 @@ public class Condition {
     private String right;
     private Operator operator;
 
-    public Boolean calculate() throws ParseException {
+    public Boolean calculate() throws ParseException, CalculateException {
         double c_left = assignExpression(left).calculate();
         double c_right = assignExpression(right).calculate();
-        return switch (operator) {
-            case GT -> c_left > c_right;
-            case LT -> c_left < c_right;
-            case EQ -> c_left == c_right;
-            case NE -> c_left != c_right;
-            case GE -> c_left >= c_right;
-            case LE -> c_left <= c_right;
+        switch (operator) {
+            case GT:
+                return c_left > c_right;
+            case LT :
+                return c_left < c_right;
+            case EQ:
+                return c_left == c_right;
+            case NE:
+                return c_left != c_right;
+            case GE:
+                return c_left >= c_right;
+            case LE:
+                return c_left <= c_right;
         };
+
+        throw new CalculateException();
     }
 
     /**
@@ -58,6 +67,9 @@ public class Condition {
         return ret;
     }
 
+    public String getText(){
+        return this.text;
+    }
     /**
      *
      * @param txt - (x + 3) * 2
@@ -88,6 +100,10 @@ public class Condition {
 
         public String getValue() {
             return this.value;
+        }
+
+        public boolean ContaintsEQUALS() {
+            return value.contains("=");
         }
     }
     

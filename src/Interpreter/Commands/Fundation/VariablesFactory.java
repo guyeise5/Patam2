@@ -6,6 +6,8 @@ import java.util.*;
 
 public final class VariablesFactory implements Variables {
 
+
+
     private static VariablesFactory instance;
 
     public static VariablesFactory getInstance() {
@@ -21,7 +23,7 @@ public final class VariablesFactory implements Variables {
      * Variables class is a singleton, do not allow access
      */
     private VariablesFactory() {
-        dropAllVariables();
+        clean();
     }
 
     @Override
@@ -39,7 +41,7 @@ public final class VariablesFactory implements Variables {
     }
 
     @Override
-    public synchronized double getValue(String variable) {
+    public synchronized Double getValue(String variable) {
         return getVariable(variable).value;
     }
 
@@ -50,16 +52,27 @@ public final class VariablesFactory implements Variables {
     }
 
     @Override
-    public synchronized void bind(String existingVariable, String newVariable) {
-        ensureExistingVariable(existingVariable);
-        ensureEmptyVariable(newVariable);
-        Variable reference = variables.get(existingVariable);
-        variables.put(newVariable, reference);
+    public synchronized void bind(String origin, String reference) {
+        if (!containsVariable(origin)) {
+            createVariable(origin);
+        }
+
+        if (!containsVariable(reference)) {
+
+            createVariable(reference);
+        }
+        Variable originVariable = variables.get(origin);
+        variables.put(reference, originVariable);
     }
 
     @Override
     public synchronized Collection<Variable> allVariables() {
         return variables.values();
+    }
+
+    @Override
+    public Collection<String> allVariableNames() {
+        return variables.keySet();
     }
 
 
@@ -68,7 +81,7 @@ public final class VariablesFactory implements Variables {
     }
 
     @Override
-    public synchronized void dropAllVariables() {
+    public synchronized void clean() {
         this.variables = new HashMap<>();
     }
 

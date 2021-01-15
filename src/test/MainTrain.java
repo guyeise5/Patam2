@@ -4,7 +4,7 @@ import Interpreter.Commands.Exceptions.*;
 import Interpreter.Commands.Fundation.CodeBlock;
 import Interpreter.Commands.Fundation.Command;
 import Interpreter.Commands.Fundation.ConditionalCommand;
-import Interpreter.Commands.util.NOP;
+import Interpreter.Commands.util.CreateVariableCommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
@@ -12,20 +12,19 @@ import java.util.Random;
 public class MainTrain {
 
 	public static void main(String[] args) {
-		// prodMain(args);
 		try {
-			testCodeBlock();
+			prodMain(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void testCodeBlock() {
+	private static void testCodeBlock() {
 		String code = "";
 		code += "var x=3\n";
 		// code += "x=4\n"; // Not working
 		code += "while x < 5 {\n";
-		code += "	while 2 < 3 {\n";
+		code += "	if 2 < 3 {\n";
 		code += "		return 5\n";
 		code += "	}\n";
 		code += "	return 2\n";
@@ -35,23 +34,7 @@ public class MainTrain {
 
 		CodeBlock x = new CodeBlock(code);
 
-		try {
-			Command<?> cmd = x.pop();  // var x=3
-			cmd.execute();
-			cmd=x.pop(); // while (...) { ... }
-			((ConditionalCommand)cmd).getCondition().calculate();
-			Command<?> cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
-			cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
-			cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
-			cmd2 = ((ConditionalCommand)cmd).getCodeBlock().pop();
-			new NOP();
-
-		}
-		catch (InterpreterException | CommandNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | InvalidArgumentsException | InvalidConditionFormatException | NoCommandsLeftException e) {
-			e.printStackTrace();
-		}
-
-
+		hardPop(x);
 	}
 	public static void testMain(String[] args)  {
 		try {
@@ -75,6 +58,8 @@ public class MainTrain {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+		} catch (CalculateException e) {
+			e.printStackTrace();
 		}
 		System.out.println("done");
 	}
@@ -85,7 +70,7 @@ public class MainTrain {
 		Simulator sim=new Simulator(port); // sim_client on port+1, sim_server on port
 		
 		int rand=r.nextInt(1000);
-		
+
 		String[] test1={
 				"return "+rand+" * 5 - (8+2)"	
 		};
@@ -99,24 +84,23 @@ public class MainTrain {
 				"var y=x+3",	
 				"return y"	
 		};
-		
+
 		if(MyInterpreter.interpret(test2)!=rand+3)
 			System.out.println("failed test2 (-20)");
-
 		String[] test3={
 				"openDataServer "+(port+1)+" 10",
 				"connect 127.0.0.1 "+port,
 				"var x",
 				"x = bind simX",
-				"var y = bind simX",	
+				"var y = bind simX",
 				"x = "+rand*2,
 				"disconnect",
-				"return y"	
+				"return y"
 		};
-		
+
 		if(MyInterpreter.interpret(test3)!=rand*2)
 			System.out.println("failed test3 (-20)");
-
+		System.out.println("simX: "+sim.simX+ " simY: "+sim.simY+ " simZ: "+sim.simZ);
 		String[] test4={
 				"openDataServer "+ (port+1)+" 10",
 				"connect 127.0.0.1 "+port,
@@ -127,10 +111,13 @@ public class MainTrain {
 				"disconnect",
 				"return x+y*z"	
 		};
-		
-		if(MyInterpreter.interpret(test4)!=sim.simX+sim.simY*sim.simZ)
+
+		int weGot = MyInterpreter.interpret(test4);
+		System.out.println("We got: " + weGot);
+		System.out.println("He got: " + String.valueOf(sim.simX+sim.simY*sim.simZ));
+		if(weGot!=sim.simX+sim.simY*sim.simZ)
 			System.out.println("failed test4 (-20)");
-				
+
 		String[] test5={
 				"var x = 0",
 				"var y = "+rand,
@@ -143,9 +130,35 @@ public class MainTrain {
 		
 		if(MyInterpreter.interpret(test5)!=rand+2*5)
 			System.out.println("failed test5 (-20)");
-		
+
+
 		sim.close();
 		System.out.println("done");
+	}
+
+	private static void hardPop(CodeBlock cb) {
+		while(!cb.isEmpty()){
+			try {
+				Command<?> pop = cb.pop();
+				if(pop instanceof CreateVariableCommand){
+					pop.execute();
+				}
+				if(pop instanceof ConditionalCommand) {
+					hardPop(((ConditionalCommand) pop).getCodeBlock());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+
+	private static void testCode() throws Exception {
+		String[] code = new String[] { "var x=1","var sum = 0", "while x <= 100 {" , "	sum=sum+x", "	x=x+1",  "}","return sum"};
+
+		System.out.println(MyInterpreter.interpret(code));
+
 	}
 
 }

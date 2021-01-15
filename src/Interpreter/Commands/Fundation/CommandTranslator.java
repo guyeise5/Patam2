@@ -18,9 +18,12 @@ public class CommandTranslator {
         this.commands = new HashMap<>();
         this.commands.put("return", RETURN.class);
         this.commands.put("var", CreateVariableCommand.class);
-        this.commands.put("=", VAR.class);
         this.commands.put("while",WHILE.class);
         this.commands.put("if", IF.class);
+        this.commands.put("openDataServer", OPENDATASERVER.class);
+        this.commands.put("connect", CONNECT.class);
+        this.commands.put("disconnect", DISCONNECT.class);
+
     }
 
     public static CommandTranslator getInstance() {
@@ -34,15 +37,12 @@ public class CommandTranslator {
     public Class<? extends Command<?>> translate(String commandName) throws CommandNotFoundException {
         commandName = commandName.replace("\t", "");
 
-        if (commandName.contains(AssignVariableCommand.ASSIGN_KEYWORD) && !commandName.contains("==")) {
-            return AssignVariableCommand.class;
-        }
         if(this.commands.containsKey(commandName)){
             return commands.get(commandName);
         }
         else if(tryParseDouble(commandName)){
             return NUMBER.class;
-        }else if (commandName.isBlank()){
+        }else if (commandName.isEmpty()){
             return NOP.class;
         }
         throw new CommandNotFoundException("Command: " + commandName + " is not a valid command");
@@ -63,6 +63,5 @@ public class CommandTranslator {
         } catch (NumberFormatException e) {
             return false;
         }
-
     }
 }

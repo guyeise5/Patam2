@@ -1,18 +1,24 @@
 package Interpreter.Commands.util;
 
 import Interpreter.Commands.Exceptions.*;
+import Interpreter.Commands.Fundation.BinaryCommand;
 import Interpreter.Commands.Fundation.Command;
-import Interpreter.Commands.Fundation.ConditionalCommand;
+import Interpreter.Network.Client;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
 
-public class WHILE extends ConditionalCommand {
+public class CONNECT extends BinaryCommand<Void> {
     @Override
     public Void execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException, CalculateException {
-        while(this.getCondition().calculate()) {
-            this.getCodeBlock().execute();
+        Client.getInstance().setHostname(getArgs()[1]);
+        Client.getInstance().setPort(Integer.parseInt(getArgs()[2]));
+        Client.getInstance().start();
+        try {
+            TimeUnit.MILLISECONDS.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
         return null;
     }
 }
